@@ -67,7 +67,7 @@ def check_full(grid):
     return True
 
 # Use depth in score:  
-def minimax(grid, depth, is_maximizing): #, alpha, beta):
+def minimax(grid, depth, is_maximizing, alpha, beta):
     winner = check_win(grid)
     if winner == "O":
         return player[winner] - depth
@@ -82,11 +82,11 @@ def minimax(grid, depth, is_maximizing): #, alpha, beta):
             for j in range(3):
                 if grid[i][j][3]:
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "O", False)
-                    score = minimax(grid, depth + 1, False) #, alpha, beta)
+                    score = minimax(grid, depth + 1, False, alpha, beta)
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                     best_score = max(best_score, score)
-                    # if best_score >= beta: return best_score
-                    # alpha = max(alpha, best_score)
+                    if best_score >= beta: return best_score
+                    alpha = max(alpha, best_score)
         return best_score
     else:
         best_score = math.inf
@@ -94,11 +94,11 @@ def minimax(grid, depth, is_maximizing): #, alpha, beta):
             for j in range(3):
                 if grid[i][j][3]:
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "X", False)
-                    score = minimax(grid, depth + 1, True) #, alpha, beta)
+                    score = minimax(grid, depth + 1, True, alpha, beta)
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                     best_score = min(best_score, score)
-                    # if best_score <= alpha: return best_score
-                    # beta = min(beta, best_score)
+                    if best_score <= alpha: return best_score
+                    beta = min(beta, best_score)
         return best_score
 
 def ai_move_o(grid):
@@ -108,7 +108,7 @@ def ai_move_o(grid):
         for j in range(3):
             if grid[i][j][2] == "":
                 grid[i][j] = (grid[i][j][0], grid[i][j][1], "O", False)
-                score = minimax(grid, 0, False) #, -math.inf, math.inf)
+                score = minimax(grid, 0, False, -math.inf, math.inf)
                 grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                 if score > best_score:
                     best_score = score
@@ -120,7 +120,7 @@ def ai_move_o(grid):
         draw_mark(x, y, "O")
     return grid
 
-def minimax2(grid, depth, is_maximizing): #, alpha, beta):
+def minimax2(grid, depth, is_maximizing, alpha, beta):
     winner = check_win(grid)
     if winner == "X":
         return player2[winner] - depth
@@ -135,11 +135,11 @@ def minimax2(grid, depth, is_maximizing): #, alpha, beta):
             for j in range(3):
                 if grid[i][j][3]:
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "X", False)
-                    score = minimax2(grid, depth + 1, False) #, alpha, beta)
+                    score = minimax2(grid, depth + 1, False, alpha, beta)
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                     best_score = max(best_score, score)
-                    # if best_score >= beta: return best_score
-                    # alpha = max(alpha, best_score)
+                    if best_score >= beta: return best_score
+                    alpha = max(alpha, best_score)
         return best_score
     else:
         best_score = math.inf
@@ -147,11 +147,11 @@ def minimax2(grid, depth, is_maximizing): #, alpha, beta):
             for j in range(3):
                 if grid[i][j][3]:
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "O", False)
-                    score = minimax2(grid, depth + 1, True) #, alpha, beta)
+                    score = minimax2(grid, depth + 1, True, alpha, beta)
                     grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                     best_score = min(best_score, score)
-                    # if best_score <= alpha: return best_score
-                    # beta = min(beta, best_score)
+                    if best_score <= alpha: return best_score
+                    beta = min(beta, best_score)
         return best_score
 
 def ai_move_x(grid):
@@ -161,7 +161,7 @@ def ai_move_x(grid):
         for j in range(3):
             if grid[i][j][2] == "":
                 grid[i][j] = (grid[i][j][0], grid[i][j][1], "X", False)
-                score = minimax2(grid, 0, False) #, -math.inf, math.inf)
+                score = minimax2(grid, 0, False, -math.inf, math.inf)
                 grid[i][j] = (grid[i][j][0], grid[i][j][1], "", True)
                 if score > best_score:
                     best_score = score
@@ -172,6 +172,7 @@ def ai_move_x(grid):
         grid[i][j] = (x, y, "X", False)
         draw_mark(x, y, "X")
     return grid
+
 
 def main():
     x_turn = False
